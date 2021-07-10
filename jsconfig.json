@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "checkJs": true,
+    "jsxImportSource": "react",
+    "strict": false,
+    "jsx": "preserve"
+  },
+  "include": [
+    "./src",
+    "./types"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
