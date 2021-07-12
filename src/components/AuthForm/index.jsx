@@ -15,9 +15,8 @@ export const AuthForm = ({
   loading = false,
   formError = '',
   handleLogin = fakeCallback,
-  setUserName = fakeCallback,
-  setPassword = fakeCallback,
   formDisabled = true,
+  formData,
 }) => {
   return (
     <DefaultContainer>
@@ -31,17 +30,17 @@ export const AuthForm = ({
           id="username"
           placeholder="Type your username"
           icon={<Person />}
-          changeFn={(v) => setUserName(v)}
           disabled={loading}
+          textValue={formData?.userName}
         />
         <FormInput
           label="password"
           id="password"
           placeholder="Type your password"
           icon={<Password />}
-          changeFn={(v) => setPassword(v)}
           disabled={loading}
           type="password"
+          textValue={formData?.password}
         />
 
         {!!formError && <FormErrorMessage>{formError}</FormErrorMessage>}
@@ -72,4 +71,8 @@ AuthForm.propTypes = {
   setPassword: P.func,
   formError: P.string,
   formDisabled: P.bool,
+  formData: P.shape({
+    userName: P.string,
+    password: P.string,
+  }).isRequired,
 };
