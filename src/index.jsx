@@ -8,30 +8,34 @@ import { DefaultRoutes } from './routes/DefaultRoutes';
 import { theme } from './styles/theme';
 import { GlobalStyles } from './styles/global-styles';
 import { Main } from './page-bases/Main';
+import { ApolloProvider } from '@apollo/client';
+import { apolloClient } from './graphql/apollo/client';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <ThemeProvider theme={theme}>
-      <Main>
-        <DefaultRoutes />
-      </Main>
+  <ApolloProvider client={apolloClient}>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <Main>
+          <DefaultRoutes />
+        </Main>
 
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        limit={5}
-      />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          limit={5}
+        />
 
-      <GlobalStyles />
-    </ThemeProvider>
-  </BrowserRouter>,
+        <GlobalStyles />
+      </ThemeProvider>
+    </BrowserRouter>
+  </ApolloProvider>,
   document.getElementById('root'),
 );
 
