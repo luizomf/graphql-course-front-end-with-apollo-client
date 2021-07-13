@@ -1,5 +1,5 @@
 {
-  "name": "graphql-course-front-end",
+  "name": "graphql-course-front-end-with-apollo-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
