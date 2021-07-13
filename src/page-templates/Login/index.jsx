@@ -16,6 +16,7 @@ export const Login = () => {
         data.login.userId,
         true,
       );
+      window.location.href = '/';
     },
   });
 
@@ -45,7 +46,7 @@ export const Login = () => {
       <Helmet title="Login - GraphQL + Apollo-Client - Otávio Miranda" />
       <AuthForm
         handleLogin={handleLogin}
-        formDisabled={false}
+        formDisabled={loading}
         formError={error?.message}
       />
     </>
