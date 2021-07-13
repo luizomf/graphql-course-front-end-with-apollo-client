@@ -3,12 +3,20 @@ import { AuthForm } from 'components/AuthForm';
 import { Helmet } from 'react-helmet';
 import { Loading } from '../../components/Loading';
 import { GQL_LOGIN } from '../../graphql/mutations/auth';
+import { authDataManager } from '../../graphql/reactive-var/auth';
 import { loginFormVar } from '../../graphql/reactive-var/login-form';
 
 export const Login = () => {
   loginFormVar.use();
   const [login, { loading, error }] = useMutation(GQL_LOGIN, {
     onError() {},
+    onCompleted(data) {
+      authDataManager.setVar(
+        loginFormVar.get().userName,
+        data.login.userId,
+        true,
+      );
+    },
   });
 
   const handleLogin = async (e) => {

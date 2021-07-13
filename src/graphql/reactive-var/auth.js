@@ -1,4 +1,4 @@
-const { makeVar } = require('@apollo/client');
+const { makeVar, useReactiveVar } = require('@apollo/client');
 
 const authVarId = '__auth_data__';
 
@@ -43,4 +43,16 @@ const hydrate = () => {
   const localDataObj = JSON.parse(localDataStr);
 
   setVar(localDataObj.userName, localDataObj.userId, localDataObj.isLoggedIn);
+};
+
+export const useAuthVar = () => {
+  authDataManager.hydrate();
+  return useReactiveVar(authVar);
+};
+
+export const authDataManager = {
+  setVar,
+  getVar,
+  resetVar,
+  hydrate,
 };
