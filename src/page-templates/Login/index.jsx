@@ -1,15 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { AuthForm } from 'components/AuthForm';
-import { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Loading } from '../../components/Loading';
 import { GQL_LOGIN } from '../../graphql/mutations/auth';
+import { loginFormVar } from '../../graphql/reactive-var/login-form';
 
 export const Login = () => {
-  const [formData, setFormData] = useState({
-    userName: '',
-    password: '',
-  });
+  loginFormVar.use();
   const [login, { loading, error }] = useMutation(GQL_LOGIN, {
     onError() {},
   });
@@ -25,7 +22,7 @@ export const Login = () => {
       password: passwordInput.value,
     };
 
-    setFormData(variables);
+    loginFormVar.set({ ...variables });
 
     await login({
       variables,
@@ -42,7 +39,6 @@ export const Login = () => {
         handleLogin={handleLogin}
         formDisabled={false}
         formError={error?.message}
-        formData={formData}
       />
     </>
   );

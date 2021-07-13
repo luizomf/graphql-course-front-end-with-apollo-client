@@ -8,7 +8,7 @@ const initialValue = {
 const loginFormVarFn = makeVar(initialValue);
 
 const useLoginFomVar = () => {
-  return useReactiveVar(loginFormVar);
+  return useReactiveVar(loginFormVarFn);
 };
 
 export const loginFormVar = {
