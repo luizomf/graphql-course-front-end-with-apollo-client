@@ -11,7 +11,7 @@ export const PostsContainer = styled.div`
   `}
 `;
 
-export const HeadingContainer = styled.div`
+export const Container = styled.div`
   ${({ theme }) => css`
     display: flex;
     align-items: center;

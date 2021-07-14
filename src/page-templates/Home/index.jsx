@@ -7,6 +7,7 @@ import { useQuery } from '@apollo/client';
 import { GQL_POSTS } from '../../graphql/queries/post';
 import { Loading } from '../../components/Loading';
 import { DefaultError } from '../../components/DefaultError';
+import { FormButton } from '../../components/FormButton';
 
 export const Home = () => {
   const { loading, error, data } = useQuery(GQL_POSTS);
@@ -15,13 +16,17 @@ export const Home = () => {
   if (error) return <DefaultError error={error} />;
   if (!data) return null;
 
+  const handleLoadMore = async () => {
+    console.log(Date.now());
+  };
+
   return (
     <>
       <Helmet title="Home - GraphQL + Apollo-Client - Otávio Miranda" />
 
-      <Styled.HeadingContainer>
+      <Styled.Container>
         <Heading>Posts</Heading>
-      </Styled.HeadingContainer>
+      </Styled.Container>
 
       <Styled.PostsContainer>
         {data.posts.map((post) => {
@@ -38,6 +43,10 @@ export const Home = () => {
           );
         })}
       </Styled.PostsContainer>
+
+      <Styled.Container>
+        <FormButton clickedFn={handleLoadMore}>Load more</FormButton>
+      </Styled.Container>
     </>
   );
 };
