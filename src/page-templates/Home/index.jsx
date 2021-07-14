@@ -1,14 +1,19 @@
 import P from 'prop-types';
 import * as Styled from './styles';
 import { Heading } from 'components/Heading';
-import { useState } from 'react';
 import { Post } from 'components/Post';
 import { Helmet } from 'react-helmet';
-
-import GET_POSTS_MOCK from 'mock/posts';
+import { useQuery } from '@apollo/client';
+import { GQL_POSTS } from '../../graphql/queries/post';
+import { Loading } from '../../components/Loading';
+import { DefaultError } from '../../components/DefaultError';
 
 export const Home = () => {
-  const [dataMock] = useState(GET_POSTS_MOCK.data);
+  const { loading, error, data } = useQuery(GQL_POSTS);
+
+  if (loading) return <Loading loading={loading} />;
+  if (error) return <DefaultError error={error} />;
+  if (!data) return null;
 
   return (
     <>
@@ -18,9 +23,8 @@ export const Home = () => {
         <Heading>Posts</Heading>
       </Styled.HeadingContainer>
 
-      {/* MOCKED RESULTS */}
       <Styled.PostsContainer>
-        {dataMock.posts.slice(-5).map((post) => {
+        {data.posts.map((post) => {
           const uniqueKey = `home-post-${post.id}`;
           return (
             <Post
