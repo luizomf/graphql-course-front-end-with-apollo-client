@@ -10,9 +10,14 @@ import { DefaultError } from '../../components/DefaultError';
 import { FormButton } from '../../components/FormButton';
 
 export const Home = () => {
-  const { loading, error, data, fetchMore } = useQuery(GQL_POSTS);
+  const { loading, error, data, fetchMore, previousData } = useQuery(
+    GQL_POSTS,
+    {
+      notifyOnNetworkStatusChange: true,
+    },
+  );
 
-  if (loading) return <Loading loading={loading} />;
+  if (loading && !previousData) return <Loading loading={loading} />;
   if (error) return <DefaultError error={error} />;
   if (!data) return null;
 
@@ -51,7 +56,9 @@ export const Home = () => {
       </Styled.PostsContainer>
 
       <Styled.Container>
-        <FormButton clickedFn={handleLoadMore}>Load more</FormButton>
+        <FormButton clickedFn={handleLoadMore} disabled={loading}>
+          {loading ? 'Carregando...' : 'Load more'}
+        </FormButton>
       </Styled.Container>
     </>
   );

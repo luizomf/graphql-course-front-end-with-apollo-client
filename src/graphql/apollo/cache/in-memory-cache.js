@@ -7,8 +7,8 @@ export const cache = new InMemoryCache({
         posts: {
           keyArgs: false,
           merge(existing = [], incoming = []) {
-            console.log('EXISTING', existing);
-            console.log('INCOMING', incoming);
+            // console.log('EXISTING', existing);
+            // console.log('INCOMING', incoming);
             return [...existing, ...incoming];
           },
         },
