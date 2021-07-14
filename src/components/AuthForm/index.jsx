@@ -8,8 +8,6 @@ import P from 'prop-types';
 import { Loading } from 'components/Loading';
 import { DefaultContainer } from '../DefaultContainer';
 import { loginFormVar } from '../../graphql/reactive-var/login-form';
-import { useAuthVar } from '../../graphql/reactive-var/auth';
-import { DefaultError } from '../DefaultError';
 
 export const AuthForm = ({
   savedUserName = '',
@@ -18,12 +16,6 @@ export const AuthForm = ({
   handleLogin,
   formDisabled = true,
 }) => {
-  const authVar = useAuthVar();
-
-  if (authVar.isLoggedIn) {
-    return <DefaultError error={new Error('You are already logged in.')} />;
-  }
-
   return (
     <DefaultContainer>
       <Styled.HeadingStyles>
