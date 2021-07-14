@@ -10,14 +10,20 @@ import { DefaultError } from '../../components/DefaultError';
 import { FormButton } from '../../components/FormButton';
 
 export const Home = () => {
-  const { loading, error, data } = useQuery(GQL_POSTS);
+  const { loading, error, data, fetchMore } = useQuery(GQL_POSTS);
 
   if (loading) return <Loading loading={loading} />;
   if (error) return <DefaultError error={error} />;
   if (!data) return null;
 
   const handleLoadMore = async () => {
-    console.log(Date.now());
+    if (!Array.isArray(data?.posts)) return;
+
+    await fetchMore({
+      variables: {
+        start: data.posts.length,
+      },
+    });
   };
 
   return (
