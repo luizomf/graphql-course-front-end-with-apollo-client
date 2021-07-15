@@ -70,7 +70,7 @@ const buttonSizeSmall = (theme) => css`
   padding: ${theme.spacings.tiny} ${theme.spacings.xsmall};
 
   > svg {
-    margin-right: ${theme.spacings.xxsmall};
+    margin-right: 0;
   }
 `;
 

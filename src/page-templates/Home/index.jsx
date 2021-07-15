@@ -8,8 +8,10 @@ import { GQL_POSTS } from '../../graphql/queries/post';
 import { Loading } from '../../components/Loading';
 import { DefaultError } from '../../components/DefaultError';
 import { FormButton } from '../../components/FormButton';
+import { useAuthVar } from '../../graphql/reactive-var/auth';
 
 export const Home = () => {
+  const authVar = useAuthVar();
   const { loading, error, data, fetchMore, previousData } = useQuery(
     GQL_POSTS,
     {
@@ -50,6 +52,7 @@ export const Home = () => {
               body={post.body}
               user={post.user}
               createdAt={post.createdAt}
+              loggedUserId={authVar.userId}
             />
           );
         })}

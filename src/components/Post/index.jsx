@@ -5,7 +5,7 @@ import { FormButton } from 'components/FormButton';
 import { Loading } from 'components/Loading';
 import P from 'prop-types';
 import { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { dateFormatter } from 'utils/date-formatter';
 import { DefaultContainer } from '../DefaultContainer';
 import { UserPropTypes } from './prop-types';
@@ -14,8 +14,6 @@ import * as Styled from './styles';
 const addLineBreaks = (text) => {
   return text.replace(/\n/g, '<br />');
 };
-
-const fakeCb = () => false;
 
 export const Post = ({
   id,
@@ -27,11 +25,10 @@ export const Post = ({
   loggedUserId = '',
   loading = false,
   error = undefined,
-  handleDelete = fakeCb,
-  handleEdit = fakeCb,
   numberOfComments = 0,
 }) => {
   const ref = useRef();
+  const history = useHistory();
 
   if (loading) return <Loading loading={loading} />;
   if (error) return <DefaultError error={error} />;
@@ -54,17 +51,16 @@ export const Post = ({
         {user.id === loggedUserId && (
           <Styled.PostTools>
             <FormButton
-              clickedFn={() => handleEdit(`/post/${id}/edit`)}
+              clickedFn={() => history.push(`/post/${id}/edit`)}
               buttonSize="small"
               icon={<Edit />}
               iconOnly
-              outlined
             />
             <FormButton
               buttonSize="small"
               icon={<Delete />}
               bgColor="secondary"
-              clickedFn={handleDelete}
+              clickedFn={() => false}
               iconOnly
               outlined
             />
