@@ -11,7 +11,12 @@ import { GQL_UPDATE_POST } from '../../graphql/mutations/post';
 export const PostEditor = () => {
   const { id } = useParams();
   const [getPost, { loading, error, data }] = useLazyQuery(GQL_POST);
-  const [updatePost, { error: updateError }] = useMutation(GQL_UPDATE_POST);
+  const [updatePost, { error: updateError }] = useMutation(GQL_UPDATE_POST, {
+    onError() {},
+    onCompleted() {
+      toast.success('Post atualizado com sucesso!');
+    },
+  });
 
   useEffect(() => {
     if (!id) return;
@@ -29,7 +34,13 @@ export const PostEditor = () => {
   };
 
   const handleUpdate = async (formValue) => {
-    console.log('UPDATE', formValue);
+    await updatePost({
+      variables: {
+        postId: id,
+        title: formValue.title,
+        body: formValue.body,
+      },
+    });
   };
 
   const handleCreate = async (formValue) => {};
