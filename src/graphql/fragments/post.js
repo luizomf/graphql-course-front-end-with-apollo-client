@@ -6,5 +6,6 @@ export const GQL_FRAGMENT_POST = gql`
     title
     body
     createdAt
+    numberOfComments @client
   }
 `;

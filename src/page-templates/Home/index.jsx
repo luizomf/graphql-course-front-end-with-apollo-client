@@ -53,6 +53,7 @@ export const Home = () => {
               user={post.user}
               createdAt={post.createdAt}
               loggedUserId={authVar.userId}
+              numberOfComments={post.numberOfComments}
             />
           );
         })}
