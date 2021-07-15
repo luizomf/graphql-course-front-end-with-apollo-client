@@ -35,6 +35,19 @@ export const Post = ({
     variables: {
       postId: id,
     },
+    update(cache) {
+      cache.modify({
+        fields: {
+          posts(existing, { readField }) {
+            return existing.filter((postRef) => {
+              const refId = readField('id', postRef);
+              console.log(postRef, `ID=${postRef.id}`, `Do readField=${refId}`);
+              return id !== refId;
+            });
+          },
+        },
+      });
+    },
   });
 
   const handleDelete = async () => {
