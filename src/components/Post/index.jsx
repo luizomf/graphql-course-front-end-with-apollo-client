@@ -41,7 +41,6 @@ export const Post = ({
           posts(existing, { readField }) {
             return existing.filter((postRef) => {
               const refId = readField('id', postRef);
-              console.log(postRef, `ID=${postRef.id}`, `Do readField=${refId}`);
               return id !== refId;
             });
           },
