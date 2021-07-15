@@ -21,3 +21,17 @@ export const GQL_UPDATE_POST = gql`
   ${GQL_FRAGMENT_POST}
   ${GQL_FRAGMENT_USER}
 `;
+
+export const GQL_CREATE_POST = gql`
+  mutation CREATE_POST($title: String!, $body: String!) {
+    createPost(data: { title: $title, body: $body }) {
+      ...post
+      user {
+        ...user
+      }
+    }
+  }
+
+  ${GQL_FRAGMENT_POST}
+  ${GQL_FRAGMENT_USER}
+`;
