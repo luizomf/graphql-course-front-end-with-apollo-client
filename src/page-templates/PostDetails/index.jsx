@@ -1,22 +1,30 @@
 import { Post } from 'components/Post';
 import { Comment } from 'components/Comment';
-import { DefaultContainer } from 'components/DefaultContainer';
-import { useHistory } from 'react-router-dom';
-import { Edit } from '@styled-icons/material-outlined';
-import { FormButton } from 'components/FormButton';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ConfirmButton } from 'components/ConfirmButton';
 import { CommentForm } from 'components/CommentForm';
-
-// MOCKED DATA
-import GET_POSTS_MOCK from 'mock/posts';
 import { Helmet } from 'react-helmet';
-const posts = GET_POSTS_MOCK.data.posts;
-const post = posts[0];
+import { useQuery } from '@apollo/client';
+import { GQL_POST } from '../../graphql/queries/post';
+import { Loading } from '../../components/Loading';
+import { DefaultError } from '../../components/DefaultError';
+import { useAuthVar } from '../../graphql/reactive-var/auth';
 
 export const PostDetails = () => {
-  const history = useHistory();
+  const authVar = useAuthVar();
+  const { id } = useParams();
+  const { loading, error, data } = useQuery(GQL_POST, {
+    variables: {
+      id,
+    },
+  });
+
+  if (loading) return <Loading loading={loading} />;
+  if (error) return <DefaultError error={error} />;
+
+  const post = data?.post;
+  if (!post) return null;
 
   return (
     <>
@@ -28,29 +36,8 @@ export const PostDetails = () => {
         body={post.body}
         user={post.user}
         createdAt={post.createdAt}
+        loggedUserId={authVar.userId}
       />
-
-      {/* THIS MAY BE TEMPORARY */}
-      <DefaultContainer>
-        <div style={{ display: 'flex', gap: '3rem', justifyContent: 'center' }}>
-          <FormButton
-            icon={<Edit />}
-            clickedFn={() => history.push(`/post/${post.id}/edit`)}
-          >
-            Edit
-          </FormButton>
-          <ConfirmButton
-            onChoice={(choice) =>
-              toast.success(
-                `Your choice is: ${choice ? 'DELETE POST' : 'CANCEL'}`,
-              )
-            }
-          >
-            Delete
-          </ConfirmButton>
-        </div>
-      </DefaultContainer>
-      {/* THIS MAY BE TEMPORARY */}
 
       {post.comments.map((comment) => {
         return (
