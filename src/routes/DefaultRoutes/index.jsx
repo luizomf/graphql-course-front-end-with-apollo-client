@@ -21,6 +21,7 @@ export const DefaultRoutes = () => {
       <PrivateRoute path="/post/:id" exact>
         <PostDetails />
       </PrivateRoute>
+
       <PrivateRoute path="/post/:id/edit" exact>
         <PostEditor />
       </PrivateRoute>
