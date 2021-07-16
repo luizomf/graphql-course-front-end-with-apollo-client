@@ -7,23 +7,27 @@ import { Helmet } from 'react-helmet';
 import { useMutation, useQuery } from '@apollo/client';
 import { GQL_POST } from '../../graphql/queries/post';
 import { Loading } from '../../components/Loading';
-import { DefaultError } from '../../components/DefaultError';
 import { useAuthVar } from '../../graphql/reactive-var/auth';
 import { GQL_CREATE_COMMENT } from '../../graphql/mutations/comment';
 import { GQL_FRAGMENT_COMMENT } from '../../graphql/fragments/comment';
+import { toast } from 'react-toastify';
 
 export const PostDetails = () => {
   const authVar = useAuthVar();
   const { id } = useParams();
-  const { loading, error, data } = useQuery(GQL_POST, {
-    onError() {},
+  const { loading, data } = useQuery(GQL_POST, {
+    onError(error) {
+      toast.error(error.message);
+    },
     variables: {
       id,
     },
   });
-  const [createComment, { error: commentError, loading: commentLoading }] =
+  const [createComment, { error: _commentError, loading: commentLoading }] =
     useMutation(GQL_CREATE_COMMENT, {
-      onError() {},
+      onError(error) {
+        toast.error(error.message);
+      },
       update(cache, { data }) {
         const postId = cache.identify({ __typename: 'Post', id: post.id });
         cache.modify({
@@ -42,9 +46,9 @@ export const PostDetails = () => {
     });
 
   if (loading) return <Loading loading={loading} />;
-  if (error || commentError) {
-    return <DefaultError error={error || commentError} />;
-  }
+  // if (error || commentError) {
+  //   return <DefaultError error={error || commentError} />;
+  // }
 
   const post = data?.post;
   if (!post) return null;
