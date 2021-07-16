@@ -16,41 +16,50 @@ export const PostDetails = () => {
   const authVar = useAuthVar();
   const { id } = useParams();
   const { loading, error, data } = useQuery(GQL_POST, {
+    onError() {},
     variables: {
       id,
     },
   });
-  const [createComment] = useMutation(GQL_CREATE_COMMENT, {
-    update(cache, { data }) {
-      const postId = cache.identify({ __typename: 'Post', id: post.id });
-      cache.modify({
-        id: postId,
-        fields: {
-          comments(existing) {
-            const commentRef = cache.writeFragment({
-              fragment: GQL_FRAGMENT_COMMENT,
-              data: data.createComment,
-            });
-            return [...existing, commentRef];
+  const [createComment, { error: commentError, loading: commentLoading }] =
+    useMutation(GQL_CREATE_COMMENT, {
+      onError() {},
+      update(cache, { data }) {
+        const postId = cache.identify({ __typename: 'Post', id: post.id });
+        cache.modify({
+          id: postId,
+          fields: {
+            comments(existing) {
+              const commentRef = cache.writeFragment({
+                fragment: GQL_FRAGMENT_COMMENT,
+                data: data.createComment,
+              });
+              return [...existing, commentRef];
+            },
           },
-        },
-      });
-    },
-  });
+        });
+      },
+    });
 
   if (loading) return <Loading loading={loading} />;
-  if (error) return <DefaultError error={error} />;
+  if (error || commentError) {
+    return <DefaultError error={error || commentError} />;
+  }
 
   const post = data?.post;
   if (!post) return null;
 
-  const handleCreateComment = async (comment) => {
+  const handleCreateComment = async (comment, callback) => {
     await createComment({
       variables: {
         comment,
         postId: post.id,
       },
     });
+
+    if (callback) {
+      callback();
+    }
   };
 
   return (
@@ -79,7 +88,10 @@ export const PostDetails = () => {
         );
       })}
 
-      <CommentForm handleSubmit={handleCreateComment} />
+      <CommentForm
+        handleSubmit={handleCreateComment}
+        buttonDisabled={loading || commentLoading}
+      />
     </>
   );
 };
