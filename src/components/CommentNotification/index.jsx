@@ -11,9 +11,9 @@ export const CommentNotification = ({ comment }) => {
       <p>
         {comment.comment.slice(0, 100)} {comment.comment.length > 100 && '...'}
       </p>
-      <p>
+      {/* <p>
         <a href={`/post/${comment.postId}?refresh=${Date.now()}`}>ver post</a>
-      </p>
+      </p> */}
     </Styled.ToastNotificationContainer>
   );
 };
