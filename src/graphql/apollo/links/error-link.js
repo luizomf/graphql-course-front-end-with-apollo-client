@@ -9,7 +9,7 @@ export const errorLink = onError(({ graphQLErrors }) => {
 
     if (errorCode === 'UNAUTHENTICATED') {
       console.log('ESSE USUÁRIO NÃO ESTÁ LOGADO, DESLOGANDO...');
-      authDataManager.resetVar();
+      authDataManager.reset();
     }
   });
 });

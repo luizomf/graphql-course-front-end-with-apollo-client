@@ -11,31 +11,34 @@ export const makeReactiveVar = (
   initialValue,
   storageKey,
   storageFunctions = storageHelpers,
+  useStorage = true,
 ) => {
   const reactiveVar = makeVar({ ...initialValue });
   const savedInitialValue = simpleObjClone(initialValue);
 
-  const setVar = (value) => {
+  const set = (value) => {
     storageFunctions.add(storageKey, value);
     reactiveVar(value);
   };
 
-  const getVar = () => {
+  const get = () => {
     return reactiveVar();
   };
 
-  const resetVar = () => {
+  const reset = () => {
     storageFunctions.delete(storageKey);
     reactiveVar(savedInitialValue);
   };
 
   const hydrate = () => {
+    if (!useStorage) return;
+
     const localDataStr = storageFunctions.getRaw(storageKey);
-    const reactiveVarData = getVar();
+    const reactiveVarData = get();
 
     if (!localDataStr) {
       if (!areObjectsEqual(reactiveVarData, savedInitialValue)) {
-        resetVar();
+        reset();
       }
       return;
     }
@@ -46,7 +49,7 @@ export const makeReactiveVar = (
 
     const localDataObj = storageFunctions.get(storageKey);
 
-    setVar(localDataObj);
+    set(localDataObj);
   };
 
   const useHook = () => {
@@ -55,10 +58,10 @@ export const makeReactiveVar = (
   };
 
   return {
-    getVar,
-    setVar,
+    get,
+    set,
     hydrate,
-    resetVar,
+    reset,
     useHook,
     reactiveVar,
   };

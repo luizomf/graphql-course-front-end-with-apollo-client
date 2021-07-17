@@ -16,3 +16,10 @@ export const storageHelpers = {
     return defaultStorage.getItem(key);
   },
 };
+
+export const noStorage = {
+  add() {},
+  delete() {},
+  get() {},
+  getRaw() {},
+};
