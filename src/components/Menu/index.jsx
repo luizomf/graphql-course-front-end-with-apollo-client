@@ -5,6 +5,9 @@ import * as Styled from './styles';
 import P from 'prop-types';
 import { memo, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useSubscription } from '@apollo/client';
+import { GQL_CREATED_COMMENT } from '../../graphql/subscriptions/comment';
+import { CommentNotification } from '../CommentNotification';
 
 export function MenuMemo({ loading = false, authVar = {}, handleLogout }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -17,6 +20,24 @@ export function MenuMemo({ loading = false, authVar = {}, handleLogout }) {
   const handleNavClick = () => {
     setIsVisible(false);
   };
+
+  useSubscription(GQL_CREATED_COMMENT, {
+    onSubscriptionData({ subscriptionData }) {
+      const comment = subscriptionData?.data?.createdComment;
+
+      if (!comment) return;
+      if (comment.user.id === authVar.userId) {
+        toast.info('You commented your own post.');
+        return;
+      }
+
+      toast.dark(<CommentNotification comment={comment} />, {
+        autoClose: false,
+        hideProgressBar: true,
+        position: 'bottom-right',
+      });
+    },
+  });
 
   return (
     <>
