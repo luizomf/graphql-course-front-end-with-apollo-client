@@ -8,11 +8,15 @@ import { toast } from 'react-toastify';
 import { useSubscription } from '@apollo/client';
 import { GQL_CREATED_COMMENT } from '../../graphql/subscriptions/comment';
 import { CommentNotification } from '../CommentNotification';
+import { notificationsVar } from '../../graphql/reactive-var/notifications';
 
 export function MenuMemo({ loading = false, authVar = {}, handleLogout }) {
+  const notificationStatus = notificationsVar.useHook();
+
   const [isVisible, setIsVisible] = useState(false);
   const notificationCb = useCallback((status) => {
     toast.success(`Notifications are ${status ? 'ON' : 'OFF'}`);
+    notificationsVar.set({ isActive: status });
   }, []);
   const hideMenu = () => setIsVisible(false);
   const showMenu = () => setIsVisible(true);
@@ -22,6 +26,7 @@ export function MenuMemo({ loading = false, authVar = {}, handleLogout }) {
   };
 
   useSubscription(GQL_CREATED_COMMENT, {
+    skip: !notificationStatus.isActive,
     onSubscriptionData({ subscriptionData }) {
       const comment = subscriptionData?.data?.createdComment;
 
@@ -76,6 +81,7 @@ export function MenuMemo({ loading = false, authVar = {}, handleLogout }) {
             <ToggleButton
               title="Toggle notifications"
               onChangeFn={notificationCb}
+              state={notificationStatus.isActive}
             />
           )}
         </Styled.VerticalCenter>
